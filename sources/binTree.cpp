@@ -1,35 +1,15 @@
 #include <stdlib.h>
 #include <stdint.h>
 
-#include "binaryTree.h"
-
-
-//--------------------------------------------------------------------------------------------------
-
-
-struct BinTreeNode
-{
-    BinTreeNode* leftNode;
-    BinTreeNode* rightNode;
-    uint8_t      value[];
-};
-
-#define BIN_TREE_NODE_SIZE(binTree) \
-    sizeof(BinTreeNode) + binTree->valueSize
-
-
-struct BinTree 
-{
-    BinTreeNode*  root;
-    comparator_t* Compare;
-    size_t        valueSize;
-};
+#include "binTree.h"
+#include "binTreeStructs.h"
 
 
 //--------------------------------------------------------------------------------------------------
 
 
 static BinTreeNode* BinTreeNodeCreate(BinTree* binTree);
+static void BinTreeNodeDelete(BinTreeNode* node);
 
 
 //--------------------------------------------------------------------------------------------------
@@ -48,13 +28,26 @@ bool BinTreeInit(BinTree** binTree, const size_t valueSize, comparator_t* Compar
     (*binTree)->Compare   = Compare;
     (*binTree)->valueSize = valueSize;
 
+    (*binTree)->root = BinTreeNodeCreate(*binTree);
+    if ((*binTree)->root == NULL)
+        return false;
+
     return true;
 }
 
 
 void BinTreeDelete(BinTree** binTree)
 {
+    if (binTree == NULL || *binTree == NULL)
+        return;
 
+    BinTreeNodeDelete((*binTree)->root);
+
+    (*binTree)->root      = NULL;
+    (*binTree)->Compare   = NULL;
+    (*binTree)->valueSize = 0;
+
+    *binTree = NULL;
 }
 
 
@@ -63,5 +56,17 @@ void BinTreeDelete(BinTree** binTree)
 
 static BinTreeNode* BinTreeNodeCreate(BinTree* binTree)
 {
+    return (BinTreeNode*) calloc(1, BIN_TREE_NODE_SIZE(binTree));
+}
+
+
+static void BinTreeNodeDelete(BinTreeNode* node)
+{
+    if (node->leftNode != NULL)
+        BinTreeNodeDelete(node->leftNode);
     
+    if (node->rightNode != NULL)
+        BinTreeNodeDelete(node->rightNode);
+
+    free(node);
 }

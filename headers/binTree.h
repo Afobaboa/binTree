@@ -1,5 +1,5 @@
-#ifndef BINARY_TREE_H
-#define BINARY_TREE_H
+#ifndef BIN_TREE_H
+#define BIN_TREE_H
 
 
 //--------------------------------------------------------------------------------------------------
@@ -37,4 +37,4 @@ void BinTreeDelete(BinTree** binTree);
 //--------------------------------------------------------------------------------------------------
 
 
-#endif // BINARY_TREE_H
+#endif // BIN_TREE_H

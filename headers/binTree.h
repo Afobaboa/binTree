@@ -19,11 +19,12 @@
 
 
 struct BinTree;
+typedef BinTree* binTree_t;
 
 
 typedef int (*comparator_t)(void* firstElemPtr, void* secondElemPtr);
 
-bool BinTreeInit(BinTree** binTree, const size_t valueSize, comparator_t* Compare
+bool BinTreeInit(binTree_t* binTree, const size_t valueSize, comparator_t* Compare
                                                 _BIN_TREE_ON_DEBUG(, VariableInitInfo initInfo));
                 
 #define BIN_TREE_INIT(binTree, valueSize, Compare) \
@@ -31,7 +32,7 @@ bool BinTreeInit(BinTree** binTree, const size_t valueSize, comparator_t* Compar
                                     _BIN_TREE_ON_DEBUG(, GET_VARIABLE_INIT_INFO(binTree)))
 
 
-void BinTreeDelete(BinTree** binTree);
+void BinTreeDelete(binTree_t* binTree);
 
 
 //--------------------------------------------------------------------------------------------------

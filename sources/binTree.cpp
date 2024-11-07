@@ -8,14 +8,14 @@
 //--------------------------------------------------------------------------------------------------
 
 
-static BinTreeNode* BinTreeNodeCreate(BinTree* binTree);
+static BinTreeNode* BinTreeNodeCreate(binTree_t binTree);
 static void BinTreeNodeDelete(BinTreeNode* node);
 
 
 //--------------------------------------------------------------------------------------------------
 
 
-bool BinTreeInit(BinTree** binTree, const size_t valueSize, comparator_t* Compare
+bool BinTreeInit(binTree_t* binTree, const size_t valueSize, comparator_t* Compare
                                                 _BIN_TREE_ON_DEBUG(, VariableInitInfo initInfo))
 {
     if (binTree == NULL || *binTree != NULL)
@@ -36,7 +36,7 @@ bool BinTreeInit(BinTree** binTree, const size_t valueSize, comparator_t* Compar
 }
 
 
-void BinTreeDelete(BinTree** binTree)
+void BinTreeDelete(binTree_t* binTree)
 {
     if (binTree == NULL || *binTree == NULL)
         return;
@@ -54,7 +54,7 @@ void BinTreeDelete(BinTree** binTree)
 //--------------------------------------------------------------------------------------------------
 
 
-static BinTreeNode* BinTreeNodeCreate(BinTree* binTree)
+static BinTreeNode* BinTreeNodeCreate(binTree_t binTree)
 {
     return (BinTreeNode*) calloc(1, BIN_TREE_NODE_SIZE(binTree));
 }

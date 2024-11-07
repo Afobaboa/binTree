@@ -14,7 +14,19 @@ static void PrintSubgraphEnding(BinTreeDumper* dumper);
 
 static void PrintBinTree(BinTreeDumper* dumper, binTree_t binTree, VariableInitInfo* variableInfo);
 
+static void DeclareBinTreeHeader(BinTreeDumper* dumper, binTree_t binTree, 
+                                 VariableInitInfo* dumpInfo);
+
+static void DeclareBinTreeNodes(BinTreeDumper* dumper, BinTreeNode* node);
+
+static void ConnectBinTreeHeader(BinTreeDumper* dumper, binTree_t binTree, 
+                                 VariableInitInfo* dumpInfo);
+
+static void ConnectBinTreeNodes(BinTreeDumper* dumper, BinTreeNode* node);
+
 static void MakeGraph(BinTreeDumper* dumper);
+
+
 
 
 //--------------------------------------------------------------------------------------------------
@@ -49,10 +61,10 @@ void BinTreeDumperDelete(BinTreeDumper* dumper)
 }
 
 
-void BinTreeDump(BinTreeDumper* dumper, binTree_t binTree, VariableInitInfo variableInfo)
+void BinTreeDump(BinTreeDumper* dumper, binTree_t binTree, VariableInitInfo dumpInfo)
 {
     PrintSubgraphHeader(dumper);
-    PrintBinTree(dumper, binTree, &variableInfo);
+    PrintBinTree(dumper, binTree, &dumpInfo);
     PrintSubgraphEnding(dumper);
 
     MakeGraph(dumper);
@@ -75,19 +87,29 @@ static void PrintDigraphEnvironment(BinTreeDumper* dumper)
 
 static void PrintSubgraphHeader(BinTreeDumper* dumper)
 {
-
+    fseek(dumper->dotDumpFile, -2, SEEK_END);
+        
+    fprintf(dumper->dotDumpFile, "\n\tsubgraph dump%zu\n"
+                                 "\t{\n"
+                                 "\t\trankdir = LR;\n",
+                                 dumper->dumpCount);
 }
 
 
 static void PrintSubgraphEnding(BinTreeDumper* dumper)
 {
-
+    fprintf(dumper->dotDumpFile, "\t}\n"
+                                 "}");
 }
 
 
-static void PrintBinTree(BinTreeDumper* dumper, binTree_t binTree, VariableInitInfo* variableInfo)
+static void PrintBinTree(BinTreeDumper* dumper, binTree_t binTree, VariableInitInfo* dumpInfo)
 {
+    DeclareBinTreeHeader(dumper, binTree, dumpInfo);
+    DeclareBinTreeNodes(dumper, binTree->root);
 
+    ConnectBinTreeHeader(dumper, binTree, dumpInfo);
+    ConnectBinTreeNodes(dumper, binTree->root);
 }
 
 
@@ -104,4 +126,30 @@ static void MakeGraph(BinTreeDumper* dumper)
 
     fflush(dumper->dotDumpFile);
     system(commandForDot);
+}
+
+
+static void DeclareBinTreeHeader(BinTreeDumper* dumper, binTree_t binTree, 
+                                 VariableInitInfo* dumpInfo)
+{
+
+}
+
+
+static void DeclareBinTreeNodes(BinTreeDumper* dumper, BinTreeNode* node)
+{
+
+}
+
+
+static void ConnectBinTreeHeader(BinTreeDumper* dumper, binTree_t binTree, 
+                                 VariableInitInfo* dumpInfo)
+{
+
+}
+
+
+static void ConnectBinTreeNodes(BinTreeDumper* dumper, BinTreeNode* node)
+{
+
 }

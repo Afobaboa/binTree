@@ -21,7 +21,7 @@ bool BinTreeDumperInit(BinTreeDumper* dumper, const char* dotDumpFileName,
                                               const char* pngDumpFileName);
 
 void BinTreeDumperDelete(BinTreeDumper* dumper);
-void BinTreeDump(BinTreeDumper* dumper, binTree_t binTree, VariableInitInfo variableInfo);
+void BinTreeDump(BinTreeDumper* dumper, binTree_t binTree, VariableInitInfo dumpInfo);
 
 
 #ifdef _BIN_TREE_DEBUG

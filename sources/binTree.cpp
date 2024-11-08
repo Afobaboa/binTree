@@ -9,11 +9,15 @@
 //--------------------------------------------------------------------------------------------------
 
 
+static bool BinTreeVerify(binTree_t binTree);
+static bool ValuePtrVerify(void* valuePtr);
+
 static BinTreeNode* BinTreeNodeCreate(binTree_t binTree);
 static void BinTreeNodeDelete(BinTreeNode* node);
 
 static void BinTreeNodeSetValue(BinTreeNode* node, const void* valuePtr, const size_t valueSize);
 static void BinTreeNodeInsert(BinTreeNode* root, BinTreeNode* node, comparator_t Compare);
+static void BinTreeNodeValueDelete(BinTreeNode** root, void* valuePtr, comparator_t Compare);
 
 
 //--------------------------------------------------------------------------------------------------
@@ -62,10 +66,8 @@ void BinTreeDelete(binTree_t* binTree)
 
 bool BinTreeInsert(binTree_t binTree, void* valuePtr)
 {
-    #ifdef _BIN_TREE_DEBUG
-    if (binTree == NULL || binTree->root == NULL || valuePtr == NULL)
+    if (!BinTreeVerify(binTree) || !ValuePtrVerify(valuePtr))
         return false;
-    #endif // _BIN_TREE_DEBUG
 
     BinTreeNode* nodeToInsert = BinTreeNodeCreate(binTree);
     if (nodeToInsert == NULL)
@@ -74,6 +76,20 @@ bool BinTreeInsert(binTree_t binTree, void* valuePtr)
     BinTreeNodeSetValue(nodeToInsert, valuePtr, binTree->valueSize);
     BinTreeNodeInsert(binTree->root, nodeToInsert, binTree->Compare);
 
+    return true;
+}
+
+
+bool BinTreeValueDelete(binTree_t binTree, void* valuePtr)
+{
+    if (!BinTreeVerify(binTree) || !ValuePtrVerify(valuePtr))
+        return false;
+
+    if (binTree->Compare(valuePtr, binTree->root->valuePtr) == NULL)
+        return false;
+
+    BinTreeNodeValueDelete(&binTree->root, valuePtr, binTree->Compare);
+    
     return true;
 }
 
@@ -122,3 +138,61 @@ static void BinTreeNodeInsert(BinTreeNode* root, BinTreeNode* node, comparator_t
             root->rightNode = node;
     }
 }
+
+
+static void BinTreeNodeValueDelete(BinTreeNode** root, void* valuePtr, comparator_t Compare)
+{
+    if (Compare(valuePtr, (*root)->valuePtr) < 0 && (*root)->leftNode != NULL)
+        BinTreeNodeValueDelete(&(*root)->leftNode, valuePtr, Compare);
+
+    else if (Compare(valuePtr, (*root)->valuePtr) > 0 && (*root)->rightNode != NULL)
+        BinTreeNodeValueDelete(&(*root)->rightNode, valuePtr, Compare);
+    
+    else if (Compare(valuePtr, (*root)->valuePtr) == NULL)
+    {
+        BinTreeNodeDelete(*root);
+        *root = NULL;
+    }
+}
+
+
+#ifndef _BIN_TREE_QUIET_VERIFY
+    #define _QUIET(...) __VA_ARGS__
+#else
+    #define _QUIET(...)  
+#endif // _BIN_TREE_QUIET_VERIFY
+
+#ifdef _BIN_TREE_DEBUG
+    #define _DEBUG_CHECK(condition)                                 \
+    {                                                               \
+        if (condition)                                              \
+        {                                                           \
+            _QUIET(ColoredPrintf(RED, GET_NAME(condition) "\n"));   \
+            return false;                                           \
+        }                                                           \
+    }
+#else
+    #define _DEBUG_CHECK(condition) 
+#endif // _BIN_TREE_DEBUG
+
+static bool BinTreeVerify(binTree_t binTree)
+{
+    _DEBUG_CHECK(binTree            == NULL);
+    _DEBUG_CHECK(binTree->root      == NULL);
+    _DEBUG_CHECK(binTree->Compare   == NULL);
+    _DEBUG_CHECK(binTree->valueSize == 0);
+
+    return true;
+}
+
+
+static bool ValuePtrVerify(void* valuePtr)
+{
+    _DEBUG_CHECK(valuePtr == NULL)
+
+    return true;
+}
+
+#undef _QUIETE
+#undef _DEBUG_CHECK
+

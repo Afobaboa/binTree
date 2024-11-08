@@ -17,20 +17,41 @@ int main()
     BIN_TREE_DUMPER_INIT(&dumper, "dump.dot", "dump.png");
 
     #define DUMP BIN_TREE_DUMP(&dumper, binTree, PrintValue)
+
+    #define INSERT(val)                 \
+    {                                   \
+        value = val;                    \
+        BinTreeInsert(binTree, &value); \
+    }
+
+    #define DELETE(val)                         \
+    {                                           \
+        value = val;                            \
+        BinTreeValueDelete(binTree, &value);    \
+    }
+
+    DUMP;
+    int value = 0;
+
+    INSERT(2);
+    INSERT(1);
+    INSERT(3);
+    INSERT(-1);
+
     DUMP;
 
-    int value = 2;
-    BinTreeInsert(binTree, &value);
+    DELETE(-1);
+    DUMP;
 
-    value = 1;
-    BinTreeInsert(binTree, &value);
-
-    value = 3;
-    BinTreeInsert(binTree, &value);
+    DELETE(2);
+    DUMP;
 
     DUMP;
+
+    
     #undef DUMP
-
+    #undef INSERT
+    #undef DELETE
 
     BIN_TREE_DUMPER_DELETE(&dumper);
     BinTreeDelete(&binTree);

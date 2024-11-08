@@ -34,6 +34,7 @@ bool BinTreeInit(binTree_t* binTree, const size_t valueSize, comparator_t Compar
 void BinTreeDelete(binTree_t* binTree);
 
 bool BinTreeInsert(binTree_t binTree, void* valuePtr);
+bool BinTreeValueDelete(binTree_t binTree, void* valuePtr);
 
 
 //--------------------------------------------------------------------------------------------------

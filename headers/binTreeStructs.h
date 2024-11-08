@@ -22,9 +22,9 @@ struct BinTreeNode
 
 struct BinTree 
 {
-    BinTreeNode*  root;
-    comparator_t* Compare;
-    size_t        valueSize;
+    BinTreeNode* root;
+    comparator_t Compare;
+    size_t       valueSize;
 
     #ifdef _BIN_TREE_DEBUG
     VariableInitInfo initInfo;

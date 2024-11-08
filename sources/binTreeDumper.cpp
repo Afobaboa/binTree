@@ -15,11 +15,9 @@ static void PrintSubgraphEnding(BinTreeDumper* dumper);
 static void PrintBinTree(BinTreeDumper* dumper, binTree_t binTree, Place* dumpPlace);
 
 static void DeclareBinTreeHeader(BinTreeDumper* dumper, binTree_t binTree, Place* dumpPlace);
-
 static void DeclareBinTreeNodes(BinTreeDumper* dumper, BinTreeNode* node, const size_t rank);
 
 static void ConnectBinTreeHeader(BinTreeDumper* dumper, binTree_t binTree);
-
 static void ConnectBinTreeNodes(BinTreeDumper* dumper, BinTreeNode* node);
 
 static void MakeGraph(BinTreeDumper* dumper);
@@ -79,7 +77,7 @@ static void PrintDigraphEnvironment(BinTreeDumper* dumper)
 {
     fprintf(dumper->dotDumpFile, "digraph dumpGraph\n"
                                  "{\n"
-                                 "\trankdir = LR; \n");
+                                 "\trankdir = HD; \n");
 }
 
 
@@ -89,7 +87,7 @@ static void PrintSubgraphHeader(BinTreeDumper* dumper)
         
     fprintf(dumper->dotDumpFile, "\n\tsubgraph dump%zu\n"
                                  "\t{\n"
-                                 "\t\trankdir = LR;\n",
+                                 "\t\trankdir = HD;\n",
                                  dumper->dumpCount);
 }
 
@@ -115,8 +113,8 @@ static void MakeGraph(BinTreeDumper* dumper)
 {
     const size_t maxCommandLength = 100;
     char commandForDot[maxCommandLength + 1] = {};
-    if (sprintf(commandForDot, "dor -Tpng %s -o %s\n", 
-                dumper->dotDumpFileName, dumper->pngDumpFileName) >= maxCommandLength)
+    if (sprintf(commandForDot, "dot -Tpng %s -o %s\n", 
+                dumper->dotDumpFileName, dumper->pngDumpFileName) >= (int) maxCommandLength)
     {
         ColoredPrintf(RED, "commandForDot is overflowed\n");
         return;
@@ -129,7 +127,7 @@ static void MakeGraph(BinTreeDumper* dumper)
 
 static void DeclareBinTreeHeader(BinTreeDumper* dumper, binTree_t binTree, Place* dumpPlace)
 {
-    fprintf(dumper->dotDumpFile, "\t\tTreeHeader%zu[color=yellow, shape=record, label=\""
+    fprintf(dumper->dotDumpFile, "\t\tTreeHeader%zu[color=red, shape=record, label=\""
                                  "{ dumpCount   | %zu   } | "
                                  "{ dumpPlace   | %s:%d } | "
                                  "{ valueSize   | %zu   } | "

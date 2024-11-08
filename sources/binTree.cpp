@@ -15,7 +15,7 @@ static void BinTreeNodeDelete(BinTreeNode* node);
 //--------------------------------------------------------------------------------------------------
 
 
-bool BinTreeInit(binTree_t* binTree, const size_t valueSize, comparator_t* Compare
+bool BinTreeInit(binTree_t* binTree, const size_t valueSize, comparator_t Compare
                                                 _BIN_TREE_ON_DEBUG(, VariableInitInfo initInfo))
 {
     if (binTree == NULL || *binTree != NULL)
@@ -51,6 +51,7 @@ void BinTreeDelete(binTree_t* binTree)
     (*binTree)->Compare   = NULL;
     (*binTree)->valueSize = 0;
 
+    free(*binTree);
     *binTree = NULL;
 }
 

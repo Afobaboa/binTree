@@ -24,6 +24,10 @@ bool BinTreeInit(binTree_t* binTree, const size_t valueSize, comparator_t* Compa
     *binTree = (BinTree*) calloc(1, sizeof(BinTree));
     if (*binTree == NULL)
         return false;
+
+    #ifdef _BIN_TREE_DEBUG
+    (*binTree)->initInfo = initInfo;
+    #endif // _BIN_TREE_DEBUG
     
     (*binTree)->Compare   = Compare;
     (*binTree)->valueSize = valueSize;

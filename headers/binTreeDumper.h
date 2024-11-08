@@ -21,7 +21,7 @@ bool BinTreeDumperInit(BinTreeDumper* dumper, const char* dotDumpFileName,
                                               const char* pngDumpFileName);
 
 void BinTreeDumperDelete(BinTreeDumper* dumper);
-void BinTreeDump(BinTreeDumper* dumper, binTree_t binTree, VariableInitInfo dumpInfo);
+void BinTreeDump(BinTreeDumper* dumper, binTree_t binTree, Place dumpPlace);
 
 
 #ifdef _BIN_TREE_DEBUG
@@ -32,7 +32,7 @@ void BinTreeDump(BinTreeDumper* dumper, binTree_t binTree, VariableInitInfo dump
         BinTreeDumperDelete(dumper)
 
     #define BIN_TREE_DUMP(dumper, binTree) \
-        BinTreeDump(dumper, binTree, GET_VARIABLE_INIT_INFO(binTree))
+        BinTreeDump(dumper, binTree, GET_PLACE())
 
 #else
     #define BIN_TREE_DUMPER_INIT(dumper, dotDumpFileName, pngDumpFileName) 

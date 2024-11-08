@@ -22,13 +22,14 @@ struct BinTree;
 typedef BinTree* binTree_t;
 
 
-typedef int (*comparator_t)(void* firstElemPtr, void* secondElemPtr);
+typedef int (*comparator_t)(const void* firstElemPtr, const void* secondElemPtr);
 
-bool BinTreeInit(binTree_t* binTree, const size_t valueSize, comparator_t Compare
-                                                _BIN_TREE_ON_DEBUG(, VariableInitInfo initInfo));
+bool BinTreeInit(binTree_t* binTree, const size_t valueSize, const void* rootValuePtr, 
+                            comparator_t Compare _BIN_TREE_ON_DEBUG(, VariableInitInfo initInfo));
                 
-#define BIN_TREE_INIT(binTree, valueSize, Compare) \
-    BinTreeInit(binTree, valueSize, Compare _BIN_TREE_ON_DEBUG(, GET_VARIABLE_INIT_INFO(binTree)))
+#define BIN_TREE_INIT(binTree, valueSize, rootValuePtr, Compare) \
+    BinTreeInit(binTree, valueSize, rootValuePtr, Compare \
+                                        _BIN_TREE_ON_DEBUG(, GET_VARIABLE_INIT_INFO(binTree)))
 
 
 void BinTreeDelete(binTree_t* binTree);

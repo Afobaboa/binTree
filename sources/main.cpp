@@ -5,14 +5,15 @@
 //--------------------------------------------------------------------------------------------------
 
 
-static int Compare(void* firstNum, void* secondNum);
-static void PrintValue(FILE* file, void* valuePtr);
+static int Compare(const void* firstNum, const void* secondNum);
+static void PrintValue(FILE* file, const void* valuePtr);
 
 
 int main()
 {
     binTree_t binTree = NULL;
-    BIN_TREE_INIT(&binTree, sizeof(int), Compare);
+    int value = -5;
+    BIN_TREE_INIT(&binTree, sizeof(int), &value, Compare);
     BinTreeDumper dumper = {};
     BIN_TREE_DUMPER_INIT(&dumper, "dump.dot", "dump.png");
 
@@ -31,7 +32,6 @@ int main()
     }
 
     DUMP;
-    int value = 0;
 
     INSERT(2);
     INSERT(1);
@@ -59,14 +59,14 @@ int main()
 }
 
 
-static int Compare(void* firstNum, void* secondNum)
+static int Compare(const void* firstNum, const void* secondNum)
 {
-    return *((int*) firstNum) - *((int*) secondNum);
+    return *((const int*) firstNum) - *((const int*) secondNum);
 }
 
 
-static void PrintValue(FILE* file, void* valuePtr)
+static void PrintValue(FILE* file, const void* valuePtr)
 {
-    int value = *((int*) valuePtr);
+    int value = *((const int*) valuePtr);
     fprintf(file, "%d", value);
 }

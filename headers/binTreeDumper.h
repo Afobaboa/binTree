@@ -18,7 +18,7 @@ struct BinTreeDumper
     size_t dumpCount;
 };
 
-typedef void (*valuePrinter_t)(FILE* file, void* valuePtr);
+typedef void (*valuePrinter_t)(FILE* file, const void* valuePtr);
 
 
 bool BinTreeDumperInit(BinTreeDumper* dumper, const char* dotDumpFileName, 

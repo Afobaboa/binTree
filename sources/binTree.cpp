@@ -23,8 +23,8 @@ static void BinTreeNodeValueDelete(BinTreeNode** root, void* valuePtr, comparato
 //--------------------------------------------------------------------------------------------------
 
 
-bool BinTreeInit(binTree_t* binTree, const size_t valueSize, comparator_t Compare
-                                                _BIN_TREE_ON_DEBUG(, VariableInitInfo initInfo))
+bool BinTreeInit(binTree_t* binTree, const size_t valueSize, const void* rootValuePtr, 
+                            comparator_t Compare _BIN_TREE_ON_DEBUG(, VariableInitInfo initInfo))
 {
     if (binTree == NULL || *binTree != NULL)
         return false;
@@ -43,6 +43,8 @@ bool BinTreeInit(binTree_t* binTree, const size_t valueSize, comparator_t Compar
     (*binTree)->root = BinTreeNodeCreate(*binTree);
     if ((*binTree)->root == NULL)
         return false;
+    
+    BinTreeNodeSetValue((*binTree)->root, rootValuePtr, valueSize);
 
     return true;
 }
@@ -85,7 +87,7 @@ bool BinTreeValueDelete(binTree_t binTree, void* valuePtr)
     if (!BinTreeVerify(binTree) || !ValuePtrVerify(valuePtr))
         return false;
 
-    if (binTree->Compare(valuePtr, binTree->root->valuePtr) == NULL)
+    if (binTree->Compare(valuePtr, binTree->root->valuePtr) == 0)
         return false;
 
     BinTreeNodeValueDelete(&binTree->root, valuePtr, binTree->Compare);
@@ -148,7 +150,7 @@ static void BinTreeNodeValueDelete(BinTreeNode** root, void* valuePtr, comparato
     else if (Compare(valuePtr, (*root)->valuePtr) > 0 && (*root)->rightNode != NULL)
         BinTreeNodeValueDelete(&(*root)->rightNode, valuePtr, Compare);
     
-    else if (Compare(valuePtr, (*root)->valuePtr) == NULL)
+    else if (Compare(valuePtr, (*root)->valuePtr) == 0)
     {
         BinTreeNodeDelete(*root);
         *root = NULL;

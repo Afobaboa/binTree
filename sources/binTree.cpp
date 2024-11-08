@@ -1,5 +1,6 @@
 #include <stdlib.h>
 #include <stdint.h>
+#include <string.h>
 
 #include "binTree.h"
 #include "binTreeStructs.h"
@@ -10,6 +11,9 @@
 
 static BinTreeNode* BinTreeNodeCreate(binTree_t binTree);
 static void BinTreeNodeDelete(BinTreeNode* node);
+
+static void BinTreeNodeSetValue(BinTreeNode* node, const void* valuePtr, const size_t valueSize);
+static void BinTreeNodeInsert(BinTreeNode* root, BinTreeNode* node, comparator_t Compare);
 
 
 //--------------------------------------------------------------------------------------------------
@@ -56,6 +60,24 @@ void BinTreeDelete(binTree_t* binTree)
 }
 
 
+bool BinTreeInsert(binTree_t binTree, void* valuePtr)
+{
+    #ifdef _BIN_TREE_DEBUG
+    if (binTree == NULL || binTree->root == NULL || valuePtr == NULL)
+        return false;
+    #endif // _BIN_TREE_DEBUG
+
+    BinTreeNode* nodeToInsert = BinTreeNodeCreate(binTree);
+    if (nodeToInsert == NULL)
+        return false;
+
+    BinTreeNodeSetValue(nodeToInsert, valuePtr, binTree->valueSize);
+    BinTreeNodeInsert(binTree->root, nodeToInsert, binTree->Compare);
+
+    return true;
+}
+
+
 //--------------------------------------------------------------------------------------------------
 
 
@@ -74,4 +96,29 @@ static void BinTreeNodeDelete(BinTreeNode* node)
         BinTreeNodeDelete(node->rightNode);
 
     free(node);
+}
+
+
+static void BinTreeNodeSetValue(BinTreeNode* node, const void* valuePtr, const size_t valueSize)
+{
+    memmove(node->valuePtr, valuePtr, valueSize);
+}
+
+
+static void BinTreeNodeInsert(BinTreeNode* root, BinTreeNode* node, comparator_t Compare)
+{
+    if (Compare(node->valuePtr, root->valuePtr) < 0)
+    {
+        if (root->leftNode != NULL)
+            BinTreeNodeInsert(root->leftNode, node, Compare);
+        else
+            root->leftNode = node;
+    }
+    else
+    {
+        if (root->rightNode != NULL)
+            BinTreeNodeInsert(root->rightNode, node, Compare);
+        else
+            root->rightNode = node;
+    }
 }

@@ -15,7 +15,18 @@ int main()
     BinTreeDumper dumper = {};
     BIN_TREE_DUMPER_INIT(&dumper, "dump.dot", "dump.png");
 
+
+    int value = 2;
+    BinTreeInsert(binTree, &value);
+
+    value = 1;
+    BinTreeInsert(binTree, &value);
+
+    value = 3;
+    BinTreeInsert(binTree, &value);
+
     BIN_TREE_DUMP(&dumper, binTree);
+
 
     BIN_TREE_DUMPER_DELETE(&dumper);
     BinTreeDelete(&binTree);

@@ -12,18 +12,17 @@ static void PrintDigraphEnvironment(BinTreeDumper* dumper);
 static void PrintSubgraphHeader(BinTreeDumper* dumper);
 static void PrintSubgraphEnding(BinTreeDumper* dumper);
 
-static void PrintBinTree(BinTreeDumper* dumper, binTree_t binTree, Place* dumpPlace);
+static void PrintBinTree(BinTreeDumper* dumper, binTree_t binTree, valuePrinter_t PrintValue, 
+                         Place* dumpPlace);
 
 static void DeclareBinTreeHeader(BinTreeDumper* dumper, binTree_t binTree, Place* dumpPlace);
-static void DeclareBinTreeNodes(BinTreeDumper* dumper, BinTreeNode* node, const size_t rank);
+static void DeclareBinTreeNodes(BinTreeDumper* dumper, BinTreeNode* node, valuePrinter_t PrintValue, 
+                                const size_t rank);
 
 static void ConnectBinTreeHeader(BinTreeDumper* dumper, binTree_t binTree);
 static void ConnectBinTreeNodes(BinTreeDumper* dumper, BinTreeNode* node);
 
 static void MakeGraph(BinTreeDumper* dumper);
-
-static void PrintValue(FILE* file, void* valuePtr);
-
 
 //--------------------------------------------------------------------------------------------------
 
@@ -57,10 +56,11 @@ void BinTreeDumperDelete(BinTreeDumper* dumper)
 }
 
 
-void BinTreeDump(BinTreeDumper* dumper, binTree_t binTree, Place dumpPlace)
+void BinTreeDump(BinTreeDumper* dumper, binTree_t binTree, valuePrinter_t PrintValue, 
+                 Place dumpPlace)
 {
     PrintSubgraphHeader(dumper);
-    PrintBinTree(dumper, binTree, &dumpPlace);
+    PrintBinTree(dumper, binTree, PrintValue, &dumpPlace);
     PrintSubgraphEnding(dumper);
 
     MakeGraph(dumper);
@@ -99,10 +99,11 @@ static void PrintSubgraphEnding(BinTreeDumper* dumper)
 }
 
 
-static void PrintBinTree(BinTreeDumper* dumper, binTree_t binTree, Place* dumpPlace)
+static void PrintBinTree(BinTreeDumper* dumper, binTree_t binTree, valuePrinter_t PrintValue, 
+                         Place* dumpPlace)
 {
     DeclareBinTreeHeader(dumper, binTree, dumpPlace);
-    DeclareBinTreeNodes(dumper, binTree->root, 0);
+    DeclareBinTreeNodes(dumper, binTree->root, PrintValue, 0);
 
     ConnectBinTreeHeader(dumper, binTree);
     ConnectBinTreeNodes(dumper, binTree->root);
@@ -149,13 +150,14 @@ static void DeclareBinTreeHeader(BinTreeDumper* dumper, binTree_t binTree, Place
 }
 
 
-static void DeclareBinTreeNodes(BinTreeDumper* dumper, BinTreeNode* node, const size_t rank)
+static void DeclareBinTreeNodes(BinTreeDumper* dumper, BinTreeNode* node, valuePrinter_t PrintValue, 
+                                const size_t rank)
 {
     if (node->leftNode != NULL)
-        DeclareBinTreeNodes(dumper, node->leftNode, rank + 1);
+        DeclareBinTreeNodes(dumper, node->leftNode, PrintValue, rank + 1);
 
     if (node->rightNode != NULL)
-        DeclareBinTreeNodes(dumper, node->rightNode, rank + 1);
+        DeclareBinTreeNodes(dumper, node->rightNode, PrintValue, rank + 1);
 
     fprintf(dumper->dotDumpFile, "\t\tnode%p_%zu[shape=record, rank=%zu, label=\""
                                  "{ value | ",
@@ -193,11 +195,4 @@ static void ConnectBinTreeNodes(BinTreeDumper* dumper, BinTreeNode* node)
                                      node, dumper->dumpCount, node->rightNode, dumper->dumpCount);
         ConnectBinTreeNodes(dumper, node->rightNode);
     }
-}
-
-
-static void PrintValue(FILE* file, void* valuePtr)
-{
-    int value = *((int*) valuePtr);
-    fprintf(file, "%d", value);
 }
